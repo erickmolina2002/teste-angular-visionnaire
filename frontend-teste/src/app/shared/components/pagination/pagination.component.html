@@ -1,0 +1,66 @@
+<nav *ngIf="lastPage > 1" aria-label="Page navigation">
+    <ul class="pagination justify-content-center mb-0">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button 
+          class="page-link" 
+          (click)="changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          aria-label="Previous"
+        >
+          &laquo;
+        </button>
+      </li>
+  
+      <ng-container *ngIf="currentPage > 3 && lastPage > 5">
+        <li class="page-item">
+          <button class="page-link" (click)="changePage(1)">1</button>
+        </li>
+        <li class="page-item disabled">
+          <span class="page-link">...</span>
+        </li>
+      </ng-container>
+  
+      <ng-container *ngFor="let page of pagesToShow()">
+        <li 
+          class="page-item" 
+          [class.active]="page === currentPage"
+          [class.disabled]="page === '...'"
+        >
+          <button 
+            *ngIf="page !== '...'"
+            class="page-link" 
+            (click)="changePage(page)"
+            [class.text-primary]="page !== currentPage"
+          >
+            {{ page }}
+          </button>
+          <span 
+            *ngIf="page === '...'" 
+            class="page-link"
+          >
+            ...
+          </span>
+        </li>
+      </ng-container>
+  
+      <ng-container *ngIf="currentPage < lastPage - 2 && lastPage > 5">
+        <li class="page-item disabled">
+          <span class="page-link">...</span>
+        </li>
+        <li class="page-item">
+          <button class="page-link" (click)="changePage(lastPage)">{{ lastPage }}</button>
+        </li>
+      </ng-container>
+  
+      <li class="page-item" [class.disabled]="currentPage === lastPage">
+        <button 
+          class="page-link" 
+          (click)="changePage(currentPage + 1)"
+          [disabled]="currentPage === lastPage"
+          aria-label="Next"
+        >
+          &raquo;
+        </button>
+      </li>
+    </ul>
+  </nav>

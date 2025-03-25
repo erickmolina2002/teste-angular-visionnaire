@@ -1,0 +1,142 @@
+<div class="container mt-4">
+  <h2 class="mb-4">
+      @if (mode === 'view') {
+          <i class="bi bi-eye me-2"></i>Visualizar Número
+      } @else if (mode === 'edit') {
+          <i class="bi bi-pencil me-2"></i>Editar Número
+      } @else {
+          <i class="bi bi-plus-circle me-2"></i>Novo Número
+      }
+  </h2>
+
+  <div *ngIf="formError" class="alert alert-danger">{{ formError }}</div>
+
+  <form [formGroup]="phoneForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+      <div class="mb-3">
+          <label class="form-label">Número de Telefone</label>
+          <input type="tel" 
+                 class="form-control" 
+                 formControlName="value"
+                 [class.is-invalid]="phoneForm.get('value')?.invalid && (phoneForm.get('value')?.dirty || phoneForm.get('value')?.touched)"
+                 [readonly]="mode === 'view'"
+                 placeholder="+55 84 99999-9999"
+                 appPhoneMask>
+          
+          <div class="invalid-feedback">
+              @if (phoneForm.get('value')?.errors?.['required']) {
+                  <div>Campo obrigatório</div>
+              }
+              @if (phoneForm.get('value')?.errors?.['pattern']) {
+                  <div>Formato inválido (ex: +55 84 99610-2212)</div>
+              }
+              @if (phoneForm.get('value')?.errors?.['serverError']) {
+                  <div>{{ phoneForm.get('value')?.errors?.['serverError'] }}</div>
+              }
+          </div>
+      </div>
+
+      <div class="mb-3">
+          <label class="form-label">Preço Mensal</label>
+          <div class="input-group">
+              <span class="input-group-text">R$</span>
+              <input type="number" 
+                     class="form-control" 
+                     formControlName="monthlyPrice"
+                     [class.is-invalid]="phoneForm.get('monthlyPrice')?.invalid && (phoneForm.get('monthlyPrice')?.dirty || phoneForm.get('monthlyPrice')?.touched)"
+                     [readonly]="mode === 'view'"
+                     step="0.01"
+                     min="0">
+          </div>
+          <div class="invalid-feedback">
+              @if (phoneForm.get('monthlyPrice')?.errors?.['required']) {
+                  <div>Campo obrigatório</div>
+              }
+              @if (phoneForm.get('monthlyPrice')?.errors?.['min']) {
+                  <div>Valor não pode ser negativo</div>
+              }
+              @if (phoneForm.get('monthlyPrice')?.errors?.['serverError']) {
+                  <div>{{ phoneForm.get('monthlyPrice')?.errors?.['serverError'] }}</div>
+              }
+          </div>
+      </div>
+
+      <div class="mb-3">
+          <label class="form-label">Taxa de Ativação</label>
+          <div class="input-group">
+              <span class="input-group-text">R$</span>
+              <input type="number" 
+                     class="form-control" 
+                     formControlName="setupPrice"
+                     [class.is-invalid]="phoneForm.get('setupPrice')?.invalid && (phoneForm.get('setupPrice')?.dirty || phoneForm.get('setupPrice')?.touched)"
+                     [readonly]="mode === 'view'"
+                     step="0.01"
+                     min="0">
+          </div>
+          <div class="invalid-feedback">
+              @if (phoneForm.get('setupPrice')?.errors?.['required']) {
+                  <div>Campo obrigatório</div>
+              }
+              @if (phoneForm.get('setupPrice')?.errors?.['min']) {
+                  <div>Valor não pode ser negativo</div>
+              }
+              @if (phoneForm.get('setupPrice')?.errors?.['serverError']) {
+                  <div>{{ phoneForm.get('setupPrice')?.errors?.['serverError'] }}</div>
+              }
+          </div>
+      </div>
+
+      <div class="mb-4">
+          <label class="form-label">Moeda</label>
+          @if (mode === 'view') {
+              <input type="text" 
+                     class="form-control" 
+                     [value]="phoneForm.get('currency')?.value" 
+                     readonly>
+          } @else {
+              <select class="form-select" 
+                      formControlName="currency"
+                      [class.is-invalid]="phoneForm.get('currency')?.invalid">
+                  <option value="BRL">Real Brasileiro (BRL)</option>
+              </select>
+          }
+          <div class="invalid-feedback">
+              @if (phoneForm.get('currency')?.errors?.['required']) {
+                  <div>Selecione uma moeda</div>
+              }
+          </div>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-4">
+          <div>
+              <button type="button" 
+                      class="btn btn-outline-secondary me-2"
+                      (click)="goBack()">
+                  <i class="bi bi-arrow-left"></i> {{ mode === 'view' ? 'Voltar' : 'Cancelar' }}
+              </button>
+
+              @if (mode !== 'view') {
+                  <button type="submit" 
+                          class="btn btn-primary"
+                          [disabled]="phoneForm.invalid || phoneForm.pristine">
+                      <i class="bi bi-check2-circle me-1"></i>
+                      {{ mode === 'edit' ? 'Salvar Alterações' : 'Cadastrar Número' }}
+                  </button>
+              }
+          </div>
+
+          @if (mode === 'view') {
+              <a [routerLink]="['/edit', phoneId]" class="btn btn-warning">
+                  <i class="bi bi-pencil-square me-1"></i>Editar
+              </a>
+          }
+      </div>
+  </form>
+
+  @if (loading) {
+      <div class="overlay">
+          <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Carregando...</span>
+          </div>
+      </div>
+  }
+</div>
