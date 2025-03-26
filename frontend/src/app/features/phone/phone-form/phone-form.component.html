@@ -1,13 +1,17 @@
 <div class="container mt-4">
-  <h2 class="mb-4">
-      @if (mode === 'view') {
+    <h2 class="mb-4">
+        <ng-container *ngIf="mode === 'view'; else editOrCreate">
           <i class="bi bi-eye me-2"></i>Visualizar Número
-      } @else if (mode === 'edit') {
-          <i class="bi bi-pencil me-2"></i>Editar Número
-      } @else {
-          <i class="bi bi-plus-circle me-2"></i>Novo Número
-      }
-  </h2>
+        </ng-container>
+        <ng-template #editOrCreate>
+          <ng-container *ngIf="mode === 'edit'">
+            <i class="bi bi-pencil me-2"></i>Editar Número
+          </ng-container>
+          <ng-container *ngIf="mode !== 'edit'">
+            <i class="bi bi-plus-circle me-2"></i>Novo Número
+          </ng-container>
+        </ng-template>
+      </h2>
 
   <div *ngIf="formError" class="alert alert-danger">{{ formError }}</div>
 
@@ -19,21 +23,43 @@
                  formControlName="value"
                  [class.is-invalid]="phoneForm.get('value')?.invalid && (phoneForm.get('value')?.dirty || phoneForm.get('value')?.touched)"
                  [readonly]="mode === 'view'"
-                 placeholder="+55 84 99999-9999"
-                 appPhoneMask>
-          
+                 placeholder="+55 11 11111-1111"
+                 appPhoneMask
+                 maxlength="17"
+                 >
           <div class="invalid-feedback">
               @if (phoneForm.get('value')?.errors?.['required']) {
                   <div>Campo obrigatório</div>
               }
               @if (phoneForm.get('value')?.errors?.['pattern']) {
-                  <div>Formato inválido (ex: +55 84 99610-2212)</div>
+                  <div>Formato inválido (ex: +55 11 11111-1111)</div>
               }
               @if (phoneForm.get('value')?.errors?.['serverError']) {
                   <div>{{ phoneForm.get('value')?.errors?.['serverError'] }}</div>
               }
           </div>
       </div>
+      <div class="input-group-container">
+      <div class="mb-4">
+        <label class="form-label">Moeda</label>
+        @if (mode === 'view') {
+            <input type="text" 
+                   class="form-control" 
+                   [value]="phoneForm.get('currency')?.value" 
+                   readonly>
+        } @else {
+            <select class="form-select" 
+                    formControlName="currency"
+                    [class.is-invalid]="phoneForm.get('currency')?.invalid">
+                <option value="BRL">Real Brasileiro (BRL)</option>
+            </select>
+        }
+        <div class="invalid-feedback">
+            @if (phoneForm.get('currency')?.errors?.['required']) {
+                <div>Selecione uma moeda</div>
+            }
+        </div>
+    </div>
 
       <div class="mb-3">
           <label class="form-label">Preço Mensal</label>
@@ -84,32 +110,12 @@
               }
           </div>
       </div>
+    </div>
+     
 
-      <div class="mb-4">
-          <label class="form-label">Moeda</label>
-          @if (mode === 'view') {
-              <input type="text" 
-                     class="form-control" 
-                     [value]="phoneForm.get('currency')?.value" 
-                     readonly>
-          } @else {
-              <select class="form-select" 
-                      formControlName="currency"
-                      [class.is-invalid]="phoneForm.get('currency')?.invalid">
-                  <option value="BRL">Real Brasileiro (BRL)</option>
-              </select>
-          }
-          <div class="invalid-feedback">
-              @if (phoneForm.get('currency')?.errors?.['required']) {
-                  <div>Selecione uma moeda</div>
-              }
-          </div>
-      </div>
-
-      <div class="d-flex justify-content-between align-items-center mt-4">
-          <div>
+      <div class="d-flex justify-content-between align-items-center mt-3 gap-1">
               <button type="button" 
-                      class="btn btn-outline-secondary me-2"
+                      class="btn btn-outline-secondary "
                       (click)="goBack()">
                   <i class="bi bi-arrow-left"></i> {{ mode === 'view' ? 'Voltar' : 'Cancelar' }}
               </button>
@@ -122,7 +128,6 @@
                       {{ mode === 'edit' ? 'Salvar Alterações' : 'Cadastrar Número' }}
                   </button>
               }
-          </div>
 
           @if (mode === 'view') {
               <a [routerLink]="['/edit', phoneId]" class="btn btn-warning">
@@ -132,11 +137,11 @@
       </div>
   </form>
 
-  @if (loading) {
-      <div class="overlay">
-          <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Carregando...</span>
-          </div>
+  <ng-container *ngIf="loading">
+    <div class="overlay">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Carregando...</span>
       </div>
-  }
+    </div>
+  </ng-container>
 </div>

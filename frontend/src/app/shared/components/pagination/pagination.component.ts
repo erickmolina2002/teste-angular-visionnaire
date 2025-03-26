@@ -49,4 +49,11 @@ export class PaginationComponent {
       this.pageChanged.emit(page);
     }
   }
+
+  adjustPageAfterDeletion(itemsOnPage: number): void {
+    if (itemsOnPage === 0 && this.currentPage > 1) {
+      this.currentPage--;
+      this.pageChanged.emit(this.currentPage);
+    }
+  }
 }

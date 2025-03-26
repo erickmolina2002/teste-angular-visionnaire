@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\PhoneCast;
 use Illuminate\Database\Eloquent\Model;
 
 class Phone extends Model
@@ -14,6 +15,7 @@ class Phone extends Model
     ];
 
     protected $casts = [
+        'value' => PhoneCast::class,
         'monthlyPrice' => 'float',
         'setupPrice' => 'float'
     ];

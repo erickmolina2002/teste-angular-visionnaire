@@ -1,18 +1,20 @@
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PhoneService } from '../../shared/services/phone.service';
+import { PhoneService } from '../../../shared/services/phone.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
-import { Phone } from '../../models/phone';
+import { Phone } from '../../../shared/models/phone';
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError, throwError } from 'rxjs';
+import { PhoneMaskDirective } from '../../../shared/directives/phone-mask.directive';
 
 @Component({
   selector: 'app-phone-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
-  templateUrl: './phone-form.component.html'
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, PhoneMaskDirective],
+  templateUrl: './phone-form.component.html',
+  styleUrls: ['./phone-form.component.scss']
 })
 export class PhoneFormComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -24,7 +26,7 @@ export class PhoneFormComponent implements OnInit {
   phoneForm = this.fb.group({
     value: ['', [
       Validators.required,
-      Validators.pattern(/^\+\d{2} \d{2} \d{4,5}-\d{4}$/)
+      Validators.pattern(/^\+\d{2} \d{2} \d{5}-\d{4}$/)
     ]],
     monthlyPrice: ['', [Validators.required, Validators.min(0)]],
     setupPrice: ['', [Validators.required, Validators.min(0)]],
@@ -71,13 +73,28 @@ export class PhoneFormComponent implements OnInit {
             return throwError(() => err);
           })
         )
-        .subscribe(phone => {
-          this.phoneForm.patchValue(phone);
+        .subscribe(response => {
+          const phone = response.data;
+          const formattedPhone = this.formatPhone(phone.value);
+          this.phoneForm.patchValue({
+            value: formattedPhone,
+            currency: phone.currency,
+            monthlyPrice: phone.monthlyPrice,
+            setupPrice: phone.setupPrice
+          });
+          console.log(phone);
           this.loading = false;
         });
     } else {
       this.loading = false;
     }
+  }
+
+  private formatPhone(value: string): string {
+    if (value) {
+      return value.replace(/^(\d{2})(\d{2})(\d{5})(\d{4})$/, '+$1 $2 $3-$4');
+    }
+    return value;
   }
 
   private handleFormState(): void {

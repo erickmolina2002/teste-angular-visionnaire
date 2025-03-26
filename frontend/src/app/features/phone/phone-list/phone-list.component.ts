@@ -1,15 +1,15 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { PhoneService } from '../../shared/services/phone.service';
-import { Phone } from '../../models/phone';
+import { PhoneService } from '../../../shared/services/phone.service';
+import { Phone } from '../../../shared/models/phone';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
+import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import { CommonModule } from '@angular/common';
-
+import { PhoneMaskPipe } from "../../../shared/pipes/phone-mask.pipe";
 @Component({
   selector: 'app-phone-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, PaginationComponent],
+  imports: [CommonModule, RouterLink, PaginationComponent, PhoneMaskPipe],
   templateUrl: './phone-list.component.html',
   styleUrls: ['./phone-list.component.scss']
 })
@@ -20,6 +20,7 @@ export class PhoneListComponent implements OnInit {
   phones: Phone[] = [];
   currentPage = 1;
   lastPage = 1;
+appPhoneMask: any;
 
   ngOnInit(): void {
     this.loadPhones();
@@ -50,4 +51,5 @@ export class PhoneListComponent implements OnInit {
         .subscribe(() => this.loadPhones());
     }
   }
+  
 }
