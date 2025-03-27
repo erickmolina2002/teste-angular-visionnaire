@@ -25,6 +25,18 @@ Este repositório contém um backend desenvolvido em Laravel e um frontend desen
 |-- frontend/ (Angular App)
 ```
 
+## Está com preguiça de configurar? Apenas rode:
+
+🐳 **Certifique-se de ter o Docker previamente instalado.** 🐳
+
+```sh
+git clone https://github.com/erickmolina2002/teste-angular-visionnaire.git && cd teste-angular-visionnaire && docker compose up -d --build
+```
+
+☕ **Isso pode levar um tempinho... Aproveite para pegar um café!** ☕
+
+
+
 ## Como Configurar o Projeto
 
 ### Backend (Laravel)
@@ -92,6 +104,4 @@ Este repositório contém um backend desenvolvido em Laravel e um frontend desen
 ## Licença
 
 Este projeto está licenciado sob a MIT License.
-
-
 
