@@ -25,7 +25,10 @@ Este repositório contém um backend desenvolvido em Laravel e um frontend desen
 |-- frontend/ (Angular App)
 ```
 
-## Está com preguiça de configurar? Apenas rode:
+## Como Configurar o Projeto
+
+
+## Está com preguiça de configurar o projeto? Apenas rode:
 
 🐳 **Certifique-se de ter o Docker previamente instalado.** 🐳
 
@@ -35,9 +38,6 @@ git clone https://github.com/erickmolina2002/teste-angular-visionnaire.git && cd
 
 ☕ **Isso pode levar um tempinho... Aproveite para pegar um café!** ☕
 
-
-
-## Como Configurar o Projeto
 
 ### Backend (Laravel)
 
