@@ -1,26 +1,29 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.2-cli
 
-RUN apk update && apk add --no-cache \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    freetype-dev \
-    sqlite-dev \
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
     zip \
-    git \
-    bash \
-    curl \
-    build-base
+    unzip \
+    libsqlite3-dev \
+    sqlite3 \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_sqlite bcmath
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN docker-php-ext-install \
+    pdo \
+    pdo_sqlite \
+    zip \
+    bcmath
 
 WORKDIR /var/www
 
-COPY ./backend /var/www
+COPY . /var/www
 
-RUN composer install
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN composer install --no-interaction --optimize-autoloader
+
+RUN if [ ! -f ".env" ]; then cp .env.example .env; fi && \
+    php artisan migrate --force
 
 EXPOSE 8000
 

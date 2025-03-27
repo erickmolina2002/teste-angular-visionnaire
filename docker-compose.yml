@@ -1,24 +1,16 @@
 services:
   backend:
     build:
-      context: .
-      dockerfile: ./backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: laravel-backend
-    volumes:
-      - ./backend:/var/www
-      - ./backend/database:/var/www/database
     ports:
       - "8000:8000"
-    depends_on:
-      - frontend
 
   frontend:
     build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: angular-frontend
-    volumes:
-      - ./frontend:/app
     ports:
       - "4200:4200"
-
