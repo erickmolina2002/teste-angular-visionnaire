@@ -32,6 +32,7 @@ Este repositório contém um backend desenvolvido em Laravel e um frontend desen
 ```sh
 git clone https://github.com/erickmolina2002/teste-angular-visionnaire.git && cd teste-angular-visionnaire && docker compose up -d --build
 ```
+Agora acesse http://localhost:4200/
 
 ☕ **Isso pode levar um tempinho... Aproveite para pegar um café!** ☕
 
